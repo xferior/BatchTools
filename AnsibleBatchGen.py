@@ -104,6 +104,8 @@ def print_error(error_message):
 # Print usage information
 def print_usage():
     print("\nUsage: python3 script.py <CT> [--no-script]")
+    print("<CT>: Ticket ID")
+    print("--no-script: Optional argument to print NODE information without generating script.\n")
     print("Required files in /tmp directory:")
     print("  1. /tmp/numbers_<CT>: Contains batches with host requirements.")
     print("     Example: B001,12")
@@ -111,8 +113,6 @@ def print_usage():
     print("     Example: 123456789,18:00")
     print("  3. /tmp/enable.node: Lists enabled NODEs for batch distribution.")
     print("     Example: NODE1")
-    print("<CT>: Unique identifier.")
-    print("--no-script: Optional argument to print NODE information without generating script.")
 
 # Main function to execute the script
 def main():
