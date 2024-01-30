@@ -16,7 +16,7 @@ Ensure the following files are present in the `/tmp` directory:
 
 1. **/tmp/numbers_`<CT>`**: Contains batches with host requirements.
    - Example: `B001,12`
-2. **/tmp/todays_ct_dates.txt**: Scheduled start times for CTs.
+2. **/tmp/todays_ct.txt**: Scheduled start times for CTs.
    - Example: `123456789,18:00`
 3. **/tmp/enable.node**: Lists enabled NODEs for batch distribution.
    - Example: `NODE1`
