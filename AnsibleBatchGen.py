@@ -109,7 +109,7 @@ def print_usage():
     print("Required files in /tmp directory:")
     print("  1. /tmp/numbers_<CT>: Contains batches with host requirements.")
     print("     Example: B001,12")
-    print("  2. /tmp/todays_crq_dates.txt: Scheduled start times for CTs.")
+    print("  2. /tmp/todays_ct.txt: Scheduled start times for CTs.")
     print("     Example: 123456789,18:00")
     print("  3. /tmp/enable.node: Lists enabled NODEs for batch distribution.")
     print("     Example: NODE1")
@@ -131,7 +131,7 @@ def main():
 
     # Define file paths for required input files
     file_path = f"/tmp/numbers_{ct}"
-    time_file_path = "/tmp/todays_crq_dates.txt"
+    time_file_path = "/tmp/todays_ct.txt"
 
     # Read and process batches, start time, and enabled nodes
     batches = read_batches(file_path)
