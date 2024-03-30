@@ -2,6 +2,12 @@ import sys
 import os
 
 
+timezone = 'America/Los_Angeles'
+working_folder = "/tmp/"
+output_directory = "/tmp/RUN/"
+enabled_nodes_file = "/tmp/enable.node"
+
+
 # Read and parse batches from a file
 def read_batches(file_path):
 
@@ -72,13 +78,17 @@ def distribute_batches(batches, enabled_nodes):
 
 
 # Create a Bash script based on distributed batches
-def create_bash_script(distributed_nodes, start_time, ct):
+def create_bash_script(
+        distributed_nodes,
+        start_time,
+        ct,
+        timezone='America/Los_Angeles'):
     total_hosts = sum(
         node_info['total_hosts'] for node_info in distributed_nodes.values()
     )
 
     bash_script = "#!/bin/bash\n\n"
-    bash_script += "TZ='America/Los_Angeles'\n"
+    bash_script += "TZ='" + timezone + "'\n"
     bash_script += "start_time=$(date -d '{} today' +%s)\n".format(start_time)
     bash_script += "current_time=$(date +%s)\n"
     bash_script += "if [[ $current_time -lt $start_time ]]; then\n"
@@ -157,13 +167,13 @@ def main():
     no_script = len(sys.argv) == 3 and sys.argv[2] == '--no-script'
 
     # Define file paths for required input files
-    file_path = f"/tmp/numbers_{ct}"
-    time_file_path = "/tmp/todays_ct.txt"
+    file_path = f"{working_folder}/numbers_{ct}"
+    time_file_path = f"{working_folder}/todays_ct.txt"
 
     # Read and process batches, start time, and enabled nodes
     batches = read_batches(file_path)
     start_time = read_start_time(ct, time_file_path)
-    enabled_nodes = read_enabled_nodes("/tmp/enable.node")
+    enabled_nodes = read_enabled_nodes(enabled_nodes_file)
 
     # Distribute batches among the enabled nodes
     distributed_nodes = distribute_batches(batches, enabled_nodes)
@@ -178,8 +188,7 @@ def main():
             print(f"NODE{node_num} @ {batch_list} @ {total_hosts}")
     else:
 
-        # Check if /tmp/RUN is a directory and writable
-        output_directory = "/tmp/RUN/"
+        # Check if output_directory is a directory and writable
         if not os.path.isdir(output_directory):
             print_error(f"Directory '{output_directory}' does not exist.")
         if not os.access(output_directory, os.W_OK):
@@ -188,7 +197,11 @@ def main():
         # Generate and save the script to execute the distribution
         output_file_name = f"start_{ct}.sh"
         output_path = os.path.join(output_directory, output_file_name)
-        bash_script = create_bash_script(distributed_nodes, start_time, ct)
+        bash_script = create_bash_script(
+            distributed_nodes,
+            start_time,
+            ct,
+            timezone)
 
         with open(output_path, "w") as file:
             file.write(bash_script)
